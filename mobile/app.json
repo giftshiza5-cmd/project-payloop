@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "PayLoop",
+    "slug": "payloop",
+    "scheme": "payloop",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "bundleIdentifier": "com.payloop.mobile"
+    },
+    "android": {
+      "package": "com.payloop.mobile"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow PayLoop to scan wallet QR codes."
+        }
+      ],
+      "expo-notifications"
+    ]
+  }
+}
