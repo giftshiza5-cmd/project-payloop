@@ -19,16 +19,24 @@ const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 };
 
-const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const hasFirebaseConfig = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId);
+const app = hasFirebaseConfig ? (getApps().length ? getApps()[0] : initializeApp(firebaseConfig)) : null;
+const db = app ? getFirestore(app) : null;
 
-export async function upsertPayLoopUser({ walletAddress, displayName }) {
+export async function upsertPayLoopUser({ walletAddress, displayName, phoneNumber, groupCode, role }) {
+  if (!db || !walletAddress) {
+    return;
+  }
+
   const normalizedAddress = walletAddress.toLowerCase();
 
   await setDoc(
     doc(db, "users", normalizedAddress),
     {
       displayName,
+      groupCode: groupCode || "",
+      phoneNumber: phoneNumber || "",
+      role: role || "Member",
       walletAddress,
       payLoopUserId: walletAddress,
       updatedAt: serverTimestamp(),
@@ -38,7 +46,7 @@ export async function upsertPayLoopUser({ walletAddress, displayName }) {
 }
 
 export async function savePushToken({ walletAddress, token }) {
-  if (!walletAddress || !token) {
+  if (!db || !walletAddress || !token) {
     return;
   }
 
@@ -56,6 +64,10 @@ export async function savePushToken({ walletAddress, token }) {
 }
 
 export async function listCircleMembers() {
+  if (!db) {
+    return [];
+  }
+
   const snapshot = await getDocs(query(collection(db, "users"), limit(25)));
 
   return snapshot.docs.map((memberDoc) => ({

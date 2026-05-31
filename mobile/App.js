@@ -193,49 +193,138 @@ function HeaderCard({ title, subtitle, theme, walletAddress, onToggleTheme, mode
   );
 }
 
-function OnboardingScreen({ navigation }) {
-  const { wallet, theme, displayName, setDisplayName, onToggleTheme, mode } = usePayLoopApp();
-  const walletConnectUri = `payloop://walletconnect?member=${displayName || "member"}`;
-
-  async function handleConnect() {
-    try {
-      const address = await wallet.connect(displayName);
-      await registerForReminders(address);
-      navigation.replace("Home");
-    } catch (error) {
-      Alert.alert("MetaMask connection failed", error.message);
-    }
-  }
+function OverviewScreen({ navigation }) {
+  const { wallet, theme, onToggleTheme, mode } = usePayLoopApp();
 
   return (
     <Screen theme={theme}>
       <HeaderCard
-        title="Connect MetaMask"
-        subtitle="Start with WalletConnect, then confirm account access in MetaMask Mobile."
+        title="PayLoop"
+        subtitle="A member app for savings groups, loan requests, credit scores, and wallet-based contributions."
         theme={theme}
         walletAddress={wallet.walletAddress}
         onToggleTheme={onToggleTheme}
         mode={mode}
       />
 
-      <View style={[styles.qrPanel, theme.panel]}>
-        <QRCode value={walletConnectUri} size={190} backgroundColor="transparent" color={mode === "dark" ? "#ffffff" : "#132036"} />
-        <Text style={[styles.copy, theme.muted]}>Scan this PayLoop WalletConnect QR code or open MetaMask directly.</Text>
+      <View style={[styles.authHero, theme.panel]}>
+        <Text style={[styles.eyebrow, theme.muted]}>Member Overview</Text>
+        <Text style={[styles.heroTitle, theme.text]}>Your chama in your pocket.</Text>
+        <Text style={[styles.copy, theme.muted]}>
+          Track vault balances, send contributions with MetaMask, request loans, scan payment QR codes, and follow your CreditLoop score.
+        </Text>
       </View>
 
-      <Text style={[styles.label, theme.text]}>Display name</Text>
-      <TextInput
-        style={[styles.input, theme.input]}
-        value={displayName}
-        onChangeText={setDisplayName}
-        placeholder="Jane Member"
-        placeholderTextColor={theme.placeholder.color}
+      <View style={styles.featureGrid}>
+        {[
+          ["Save", "Contribute directly to the group vault."],
+          ["Borrow", "Submit loan requests for member voting."],
+          ["Score", "Build a credit profile from repayment behavior."],
+          ["Verify", "Review members and transparent group activity."],
+        ].map(([title, copy]) => (
+          <View key={title} style={[styles.featureCard, theme.panel]}>
+            <Text style={[styles.featureTitle, theme.text]}>{title}</Text>
+            <Text style={[styles.copySmall, theme.muted]}>{copy}</Text>
+          </View>
+        ))}
+      </View>
+
+      <View style={styles.authActions}>
+        <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate("Register")}>
+          <Text style={styles.primaryButtonText}>Create Account</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.secondaryButton, theme.softPanel]} onPress={() => navigation.navigate("Login")}>
+          <Text style={[styles.secondaryButtonText, theme.text]}>Login</Text>
+        </TouchableOpacity>
+      </View>
+    </Screen>
+  );
+}
+
+function RegisterScreen({ navigation }) {
+  const { wallet, theme, displayName, setDisplayName, onToggleTheme, mode } = usePayLoopApp();
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [groupCode, setGroupCode] = useState("");
+  const walletConnectUri = `payloop://register?member=${encodeURIComponent(displayName || "member")}`;
+
+  async function handleRegister() {
+    try {
+      const address = await wallet.connect(displayName);
+      await upsertPayLoopUser({
+        walletAddress: address,
+        displayName,
+        phoneNumber,
+        groupCode,
+        role: "Member",
+      });
+      await registerForReminders(address);
+      navigation.replace("Home");
+    } catch (error) {
+      Alert.alert("Registration failed", error.message);
+    }
+  }
+
+  return (
+    <Screen theme={theme}>
+      <HeaderCard
+        title="Create Account"
+        subtitle="Register your profile, connect MetaMask, and join your savings group."
+        theme={theme}
+        walletAddress={wallet.walletAddress}
+        onToggleTheme={onToggleTheme}
+        mode={mode}
       />
 
-      <TouchableOpacity style={styles.primaryButton} onPress={handleConnect}>
-        <Text style={styles.primaryButtonText}>
-          {wallet.isConnecting ? "Connecting..." : "Connect MetaMask Wallet"}
-        </Text>
+      <AuthQRCode value={walletConnectUri} theme={theme} mode={mode} copy="MetaMask will confirm your wallet during registration." />
+
+      <AuthField label="Full name" value={displayName} onChangeText={setDisplayName} placeholder="Jane Member" theme={theme} />
+      <AuthField label="Phone number" value={phoneNumber} onChangeText={setPhoneNumber} placeholder="+254 700 000 000" theme={theme} keyboardType="phone-pad" />
+      <AuthField label="Group invite code" value={groupCode} onChangeText={setGroupCode} placeholder="ELDORET-2026" theme={theme} autoCapitalize="characters" />
+
+      <TouchableOpacity style={styles.primaryButton} onPress={handleRegister}>
+        <Text style={styles.primaryButtonText}>{wallet.isConnecting ? "Connecting..." : "Register with MetaMask"}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.linkButton} onPress={() => navigation.navigate("Login")}>
+        <Text style={[styles.linkButtonText, theme.muted]}>Already registered? Login</Text>
+      </TouchableOpacity>
+    </Screen>
+  );
+}
+
+function LoginScreen({ navigation }) {
+  const { wallet, theme, displayName, setDisplayName, onToggleTheme, mode } = usePayLoopApp();
+  const walletConnectUri = `payloop://login?member=${encodeURIComponent(displayName || "member")}`;
+
+  async function handleLogin() {
+    try {
+      const address = await wallet.connect(displayName);
+      await registerForReminders(address);
+      navigation.replace("Home");
+    } catch (error) {
+      Alert.alert("Login failed", error.message);
+    }
+  }
+
+  return (
+    <Screen theme={theme}>
+      <HeaderCard
+        title="Login"
+        subtitle="Connect the wallet you registered with to open your PayLoop member dashboard."
+        theme={theme}
+        walletAddress={wallet.walletAddress}
+        onToggleTheme={onToggleTheme}
+        mode={mode}
+      />
+
+      <AuthQRCode value={walletConnectUri} theme={theme} mode={mode} copy="Scan or continue to MetaMask Mobile to approve account access." />
+
+      <AuthField label="Display name" value={displayName} onChangeText={setDisplayName} placeholder="Jane Member" theme={theme} />
+
+      <TouchableOpacity style={styles.primaryButton} onPress={handleLogin}>
+        <Text style={styles.primaryButtonText}>{wallet.isConnecting ? "Connecting..." : "Login with MetaMask"}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.linkButton} onPress={() => navigation.navigate("Register")}>
+        <Text style={[styles.linkButtonText, theme.muted]}>New to PayLoop? Create account</Text>
       </TouchableOpacity>
     </Screen>
   );
@@ -552,6 +641,28 @@ function Metric({ label, value, theme }) {
   );
 }
 
+function AuthField({ label, theme, ...inputProps }) {
+  return (
+    <View style={styles.authField}>
+      <Text style={[styles.label, theme.text]}>{label}</Text>
+      <TextInput
+        style={[styles.input, theme.input]}
+        placeholderTextColor={theme.placeholder.color}
+        {...inputProps}
+      />
+    </View>
+  );
+}
+
+function AuthQRCode({ value, theme, mode, copy }) {
+  return (
+    <View style={[styles.qrPanel, theme.panel]}>
+      <QRCode value={value} size={178} backgroundColor="transparent" color={mode === "dark" ? "#ffffff" : "#132036"} />
+      <Text style={[styles.copy, theme.muted]}>{copy}</Text>
+    </View>
+  );
+}
+
 function FormCard({ title, subtitle, children, theme }) {
   return (
     <View style={[styles.formCard, theme.panel]}>
@@ -622,13 +733,16 @@ export default function App() {
       <PayLoopContext.Provider value={screenParams}>
         <NavigationContainer theme={mode === "dark" ? DarkTheme : DefaultTheme}>
           <Stack.Navigator
+            initialRouteName="Overview"
             screenOptions={{
               headerStyle: { backgroundColor: theme.screen.backgroundColor },
               headerTintColor: theme.text.color,
               headerShadowVisible: false,
             }}
           >
-            <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+            <Stack.Screen name="Overview" component={OverviewScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Register" component={RegisterScreen} options={{ title: "Create Account" }} />
+            <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Contribute" component={ContributeScreen} />
             <Stack.Screen name="LoanRequest" component={LoanRequestScreen} options={{ title: "Loan Request" }} />
@@ -743,6 +857,48 @@ const styles = StyleSheet.create({
     gap: 16,
     padding: 22,
   },
+  authHero: {
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 10,
+    padding: 20,
+  },
+  heroTitle: {
+    fontSize: 34,
+    fontWeight: "900",
+    lineHeight: 39,
+  },
+  featureGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+  },
+  featureCard: {
+    borderRadius: 8,
+    borderWidth: 1,
+    minHeight: 104,
+    padding: 14,
+    width: "47%",
+  },
+  featureTitle: {
+    fontSize: 17,
+    fontWeight: "900",
+    marginBottom: 8,
+  },
+  authActions: {
+    gap: 10,
+  },
+  authField: {
+    gap: 8,
+  },
+  linkButton: {
+    alignItems: "center",
+    minHeight: 42,
+    justifyContent: "center",
+  },
+  linkButtonText: {
+    fontWeight: "800",
+  },
   label: {
     fontSize: 14,
     fontWeight: "800",
@@ -770,7 +926,6 @@ const styles = StyleSheet.create({
     borderColor: "#c5ccda",
     borderRadius: 7,
     borderWidth: 1,
-    marginTop: 12,
     minHeight: 42,
     justifyContent: "center",
     paddingHorizontal: 14,

@@ -13,6 +13,9 @@
     "android": {
       "package": "com.payloop.mobile"
     },
+    "web": {
+      "favicon": "./assets/favicon.svg"
+    },
     "plugins": [
       [
         "expo-camera",
