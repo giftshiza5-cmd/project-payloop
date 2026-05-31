@@ -10,10 +10,15 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const hasFirebaseConfig = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId);
+const app = hasFirebaseConfig ? (getApps().length ? getApps()[0] : initializeApp(firebaseConfig)) : null;
+const db = app ? getFirestore(app) : null;
 
 export async function upsertPayLoopUser({ walletAddress, displayName }) {
+  if (!db) {
+    return;
+  }
+
   const normalizedAddress = walletAddress.toLowerCase();
 
   await setDoc(

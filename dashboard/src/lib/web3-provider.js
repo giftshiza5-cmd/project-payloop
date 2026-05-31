@@ -2,7 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http, WagmiProvider, createConfig, createStorage } from "wagmi";
-import { polygon } from "wagmi/chains";
+import { polygonAmoy } from "wagmi/chains";
 
 const queryClient = new QueryClient();
 
@@ -17,10 +17,10 @@ const sessionOnlyStorage = createStorage({
 });
 
 const config = createConfig({
-  chains: [polygon],
+  chains: [polygonAmoy],
   storage: sessionOnlyStorage,
   transports: {
-    [polygon.id]: http(),
+    [polygonAmoy.id]: http(process.env.NEXT_PUBLIC_POLYGON_AMOY_RPC_URL),
   },
 });
 
