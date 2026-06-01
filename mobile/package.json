@@ -4,7 +4,9 @@
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
+    "dev": "expo start",
     "start": "expo start",
+    "build": "expo export",
     "android": "expo start --android",
     "ios": "expo start --ios"
   },
@@ -12,7 +14,6 @@
     "@metamask/sdk": "^0.33.0",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
-    "@walletconnect/react-native-dapp": "^1.8.0",
     "ethers": "^6.13.4",
     "expo": "^51.0.0",
     "expo-camera": "^15.0.16",
