@@ -857,6 +857,48 @@ function MembersScreen() {
   );
 }
 
+async function openScannedValue(value) {
+  if (!value) {
+    return;
+  }
+
+  const trimmed = value.trim();
+  const ethereumAddress = /^0x[0-9a-fA-F]{40}$/.test(trimmed);
+  const isUrl = /^(https?:\/\/|payloop:\/\/|ethereum:|wc:|mailto:|sms:)/i.test(trimmed);
+
+  if (isUrl && (await Linking.canOpenURL(trimmed))) {
+    await Linking.openURL(trimmed);
+    return;
+  }
+
+  if (ethereumAddress) {
+    const ethUrl = `ethereum:${trimmed}`;
+    if (await Linking.canOpenURL(ethUrl)) {
+      await Linking.openURL(ethUrl);
+      return;
+    }
+
+    const metaMaskUrl = `https://metamask.app.link/send/${trimmed}`;
+    if (await Linking.canOpenURL(metaMaskUrl)) {
+      await Linking.openURL(metaMaskUrl);
+      return;
+    }
+  }
+
+  Alert.alert(
+    "Cannot open QR code",
+    "The scanned QR code does not contain a link or a supported wallet address.",
+  );
+}
+
+function shouldOpenScan(value) {
+  if (!value) {
+    return false;
+  }
+
+  return /^(https?:\/\/|payloop:\/\/|ethereum:|wc:|mailto:|sms:)/i.test(value.trim()) || /^0x[0-9a-fA-F]{40}$/.test(value.trim());
+}
+
 function QRScannerScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState("");
@@ -884,11 +926,24 @@ function QRScannerScreen() {
       <CameraView
         style={styles.camera}
         barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
-        onBarcodeScanned={({ data }) => setScanned(data)}
+        onBarcodeScanned={async ({ data }) => {
+          setScanned(data);
+          if (shouldOpenScan(data)) {
+            await openScannedValue(data);
+          }
+        }}
       />
       <View style={styles.scannerResult}>
         <Text style={styles.cardTitle}>Scanned Wallet</Text>
         <Text style={styles.mutedCopy}>{scanned || "Point camera at a wallet payment QR code."}</Text>
+        {scanned && shouldOpenScan(scanned) ? (
+          <TouchableOpacity
+            style={[styles.primaryButton, { marginTop: 12 }]}
+            onPress={() => openScannedValue(scanned)}
+          >
+            <Text style={styles.primaryButtonText}>Open scanned link</Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </Screen>
   );
@@ -1059,6 +1114,26 @@ async function registerForReminders(walletAddress) {
   });
 }
 
+const linking = {
+  prefixes: [Linking.createURL("/"), "payloop://"],
+  config: {
+    screens: {
+      Overview: "",
+      Register: "register",
+      Login: "login",
+      Dashboard: "dashboard",
+      Groups: "groups",
+      Contribute: "contribute",
+      LoanRequest: "loan-request",
+      CreditScore: "credit-score",
+      Transactions: "transactions",
+      Profile: "profile",
+      Members: "members",
+      QRScanner: "scan",
+    },
+  },
+};
+
 export default function App() {
   const wallet = usePayLoopWallet();
   const [displayName, setDisplayName] = useState("John");
@@ -1071,7 +1146,7 @@ export default function App() {
 
   return (
     <PayLoopContext.Provider value={screenParams}>
-      <NavigationContainer theme={DefaultTheme}>
+      <NavigationContainer theme={DefaultTheme} linking={linking}>
         <Stack.Navigator
           initialRouteName="Overview"
           screenOptions={{
