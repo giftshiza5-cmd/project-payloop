@@ -15,7 +15,10 @@ import {
   YAxis,
 } from "recharts";
 
-const colors = ["#14b8a6", "#f59e0b", "#60a5fa", "#ef4444", "#a78bfa"];
+const colors = ["#22c55e", "#f59e0b", "#3b82f6", "#ef4444", "#7c3aed"];
+const gridColor = "#e2e8f0";
+const axisColor = "#64748b";
+const tooltipStyle = { background: "#ffffff", border: "1px solid #dfe7f2", borderRadius: 8, boxShadow: "0 12px 28px rgba(15, 23, 42, 0.1)" };
 
 export function ContributionTrendChart({ data }) {
   return (
@@ -23,15 +26,15 @@ export function ContributionTrendChart({ data }) {
       <AreaChart data={data}>
         <defs>
           <linearGradient id="vaultTrend" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="5%" stopColor="#14b8a6" stopOpacity={0.55} />
-            <stop offset="95%" stopColor="#14b8a6" stopOpacity={0.02} />
+            <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.38} />
+            <stop offset="95%" stopColor="#7c3aed" stopOpacity={0.03} />
           </linearGradient>
         </defs>
-        <CartesianGrid stroke="#26364f" strokeDasharray="3 3" />
-        <XAxis dataKey="month" stroke="#94a3b8" />
-        <YAxis stroke="#94a3b8" />
-        <Tooltip contentStyle={{ background: "#0f1a2a", border: "1px solid #26364f" }} />
-        <Area type="monotone" dataKey="amount" stroke="#14b8a6" fill="url(#vaultTrend)" strokeWidth={3} />
+        <CartesianGrid stroke={gridColor} strokeDasharray="3 3" />
+        <XAxis dataKey="month" stroke={axisColor} />
+        <YAxis stroke={axisColor} />
+        <Tooltip contentStyle={tooltipStyle} />
+        <Area type="monotone" dataKey="amount" stroke="#7c3aed" fill="url(#vaultTrend)" strokeWidth={3} />
       </AreaChart>
     </ResponsiveContainer>
   );
@@ -41,10 +44,10 @@ export function MemberContributionChart({ data }) {
   return (
     <ResponsiveContainer width="100%" height={260}>
       <BarChart data={data}>
-        <CartesianGrid stroke="#26364f" strokeDasharray="3 3" />
-        <XAxis dataKey="name" stroke="#94a3b8" tick={{ fontSize: 11 }} />
-        <YAxis stroke="#94a3b8" />
-        <Tooltip contentStyle={{ background: "#0f1a2a", border: "1px solid #26364f" }} />
+        <CartesianGrid stroke={gridColor} strokeDasharray="3 3" />
+        <XAxis dataKey="name" stroke={axisColor} tick={{ fontSize: 11 }} />
+        <YAxis stroke={axisColor} />
+        <Tooltip contentStyle={tooltipStyle} />
         <Bar dataKey="amount" radius={[6, 6, 0, 0]}>
           {data.map((entry, index) => (
             <Cell key={entry.name} fill={colors[index % colors.length]} />
@@ -70,7 +73,7 @@ export function LoanStatusChart({ data }) {
             <Cell key={entry.name} fill={colors[index % colors.length]} />
           ))}
         </Pie>
-        <Tooltip contentStyle={{ background: "#0f1a2a", border: "1px solid #26364f" }} />
+        <Tooltip contentStyle={tooltipStyle} />
       </PieChart>
     </ResponsiveContainer>
   );

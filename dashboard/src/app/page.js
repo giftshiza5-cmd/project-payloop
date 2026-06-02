@@ -9,14 +9,14 @@ export default function HomePage() {
       <section className="grid w-full max-w-5xl gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
         <div>
           <p className="stat-label mb-4">PayLoop Admin</p>
-          <h1 className="max-w-3xl text-4xl font-black tracking-normal sm:text-6xl">Run group vaults with wallet-native governance.</h1>
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-            Create savings groups, onboard members, review loan votes, and publish transparent public stats from one treasurer dashboard.
+          <h1 className="max-w-3xl text-4xl font-black tracking-normal sm:text-6xl">Open the right dashboard for every PayLoop role.</h1>
+          <p className="mt-5 max-w-2xl text-lg font-medium leading-8 text-slate-600">
+            Members, treasurers, group admins, and super admins each get a dashboard scoped to what they are allowed to manage.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <WalletButton compact />
-            <Link className="button-secondary" href="/group">
-              Open Dashboard
+            <Link className="button-secondary" href="/login">
+              Login / Register
             </Link>
           </div>
         </div>
@@ -27,13 +27,13 @@ export default function HomePage() {
               <p className="stat-label">Current Vault</p>
               <strong className="text-3xl">KES 1.25M</strong>
             </div>
-            <span className="status-pill bg-teal-500/15 text-teal-200">Live</span>
+            <span className="status-pill bg-emerald-100 text-emerald-700">Live</span>
           </div>
           <div className="grid gap-3">
-            {["Create group vault", "Add wallet members", "Vote on loans", "Export meeting PDF"].map((item) => (
-              <div key={item} className="flex items-center justify-between rounded-[7px] border border-[var(--border)] bg-white/[0.03] p-3">
+            {["Member Dashboard", "Treasurer Dashboard", "Group Admin Dashboard", "Super Admin Dashboard"].map((item) => (
+              <div key={item} className="flex items-center justify-between rounded-[7px] border border-[var(--border)] bg-slate-50 p-3">
                 <span className="font-bold">{item}</span>
-                <span className="text-teal-300">Ready</span>
+                <span className="text-sm font-black text-violet-600">Ready</span>
               </div>
             ))}
           </div>
