@@ -1,25 +1,6 @@
 "use client";
 
 import { DashboardShell } from "../../components/DashboardShell";
-<<<<<<< ours
-import { ContributionTrendChart, LoanStatusChart, MemberContributionChart } from "../../components/Charts";
-import { contributionTrend, groupStats, loanHistory, memberContributions } from "../../lib/data";
-import { exportMeetingReport } from "../../lib/pdf";
-
-export default function GroupDashboardPage() {
-  return (
-    <DashboardShell
-      title="Group Dashboard"
-      subtitle="Monitor vault growth, member contribution behavior, and loan activity for the active savings group."
-      actions={<button className="button-secondary" onClick={exportMeetingReport}>Export PDF</button>}
-    >
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {groupStats.map((stat) => (
-          <article className="panel p-4" key={stat.label}>
-            <p className="stat-label">{stat.label}</p>
-            <strong className="mt-3 block text-2xl">{stat.value}</strong>
-            <span className="mt-2 block text-sm text-teal-200">{stat.helper}</span>
-=======
 import { ContributionTrendChart, LoanStatusChart } from "../../components/Charts";
 import { contributionTrend, loanHistory, memberContributions } from "../../lib/data";
 import { exportMeetingReport } from "../../lib/pdf";
@@ -107,7 +88,7 @@ export default function GroupDashboardPage() {
     >
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         {metrics.map((metric) => (
-          <article className="panel metric-card p-4" key={metric.label} style={toneStyles[metric.tone]}>
+          <article className="panel glass-panel card-3d metric-card p-4" key={metric.label} style={toneStyles[metric.tone]}>
             <div className="relative z-10 flex items-start justify-between gap-3">
               <div className="icon-badge">{metric.icon}</div>
               <Sparkline tone={metric.tone} />
@@ -117,54 +98,12 @@ export default function GroupDashboardPage() {
               <strong className="mt-1 block text-2xl tracking-tight">{metric.value}</strong>
               <span className={`mt-2 block text-xs font-black ${metric.tone === "amber" ? "text-amber-600" : "text-emerald-600"}`}>{metric.helper}</span>
             </div>
->>>>>>> theirs
           </article>
         ))}
       </section>
 
-<<<<<<< ours
-      <section className="mt-5 grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-        <article className="panel p-4">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-black">Total Vault Trend</h2>
-            <span className="text-sm text-slate-400">Last 6 months</span>
-          </div>
-          <ContributionTrendChart data={contributionTrend} />
-        </article>
-
-        <article className="panel p-4">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-black">Contributions by Member</h2>
-            <span className="text-sm text-slate-400">KES</span>
-          </div>
-          <MemberContributionChart data={memberContributions} />
-        </article>
-
-        <article className="panel p-4">
-          <h2 className="mb-4 text-lg font-black">Loan Status</h2>
-          <LoanStatusChart data={loanHistory} />
-        </article>
-
-        <article className="panel p-4">
-          <h2 className="mb-4 text-lg font-black">Loan History</h2>
-          <div className="grid gap-3">
-            {loanHistory.map((loan) => (
-              <div key={loan.id} className="grid gap-2 rounded-[7px] border border-[var(--border)] p-3 sm:grid-cols-[1fr_auto]">
-                <div>
-                  <strong>{loan.borrower}</strong>
-                  <p className="text-sm text-slate-400">{loan.purpose}</p>
-                </div>
-                <div className="text-left sm:text-right">
-                  <strong>KES {loan.amount.toLocaleString()}</strong>
-                  <span className="block text-sm text-slate-400">{loan.status}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </article>
-=======
       <section className="mt-4 grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-        <article className="panel p-4">
+        <article className="panel glass-panel card-3d p-4">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
               <h2 className="text-lg font-black">Recommended Roles</h2>
@@ -193,7 +132,7 @@ export default function GroupDashboardPage() {
           </div>
         </article>
 
-        <article className="panel p-4">
+        <article className="panel glass-panel card-3d p-4">
           <h2 className="text-lg font-black">Dashboard Access Flow</h2>
           <p className="mt-1 text-sm font-medium text-slate-500">Login state and role decide where the user is sent.</p>
           <div className="mt-5 grid gap-3">
@@ -215,7 +154,7 @@ export default function GroupDashboardPage() {
       </section>
 
       <section className="mt-4 grid gap-4 xl:grid-cols-[1.22fr_0.78fr_0.88fr]">
-        <article className="panel p-4 xl:col-span-2">
+        <article className="panel glass-panel card-3d p-4 xl:col-span-2">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
               <h2 className="text-lg font-black">Contributions Overview</h2>
@@ -229,7 +168,7 @@ export default function GroupDashboardPage() {
           <ContributionTrendChart data={contributionTrend} />
         </article>
 
-        <article className="panel p-4">
+        <article className="panel glass-panel card-3d p-4">
           <div className="mb-2 flex items-center justify-between gap-3">
             <h2 className="text-lg font-black">Loan Status Overview</h2>
             <select className="rounded-[7px] border border-[var(--border)] bg-white px-2 py-1.5 text-xs font-bold text-slate-600">
@@ -250,7 +189,7 @@ export default function GroupDashboardPage() {
       </section>
 
       <section className="mt-4 grid gap-4 xl:grid-cols-[1.35fr_0.65fr]">
-        <article className="panel overflow-hidden">
+        <article className="panel glass-panel card-3d overflow-hidden">
           <div className="flex items-center justify-between p-4">
             <h2 className="text-lg font-black">Pending Loan Requests</h2>
             <a className="text-sm font-black text-violet-600" href="/loans">View all</a>
@@ -294,7 +233,7 @@ export default function GroupDashboardPage() {
         </article>
 
         <div className="grid gap-4">
-          <article className="panel p-4">
+          <article className="panel glass-panel card-3d p-4">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-lg font-black">Recent Transactions</h2>
               <a className="text-sm font-black text-violet-600" href="/transparency">View all</a>
@@ -316,7 +255,7 @@ export default function GroupDashboardPage() {
             </div>
           </article>
 
-          <article className="panel p-4">
+          <article className="panel glass-panel card-3d p-4">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-lg font-black">Top Contributors</h2>
               <a className="text-sm font-black text-violet-600" href="/members">View all</a>
@@ -340,7 +279,7 @@ export default function GroupDashboardPage() {
       </section>
 
       <section className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-[0.86fr_0.86fr_1fr_1.12fr]">
-        <article className="panel p-4">
+        <article className="panel glass-panel card-3d p-4">
           <p className="stat-label">Smart Contract (CircleVault)</p>
           <strong className="mt-2 block truncate">0xA1b2...C3d4</strong>
           <div className="mt-3 flex items-center justify-between text-xs font-bold text-slate-500">
@@ -348,17 +287,17 @@ export default function GroupDashboardPage() {
             <span className="status-pill bg-emerald-100 text-emerald-700">Verified</span>
           </div>
         </article>
-        <article className="panel p-4">
+        <article className="panel glass-panel card-3d p-4">
           <p className="stat-label">Total Transactions</p>
           <strong className="mt-2 block text-2xl">256</strong>
           <span className="text-xs font-black text-emerald-600">+18.6% this month</span>
         </article>
-        <article className="panel p-4">
+        <article className="panel glass-panel card-3d p-4">
           <p className="stat-label">Total Volume (KES)</p>
           <strong className="mt-2 block text-2xl">KES 2,030,000</strong>
           <span className="text-xs font-black text-emerald-600">+14.2% this month</span>
         </article>
-        <article className="panel grid grid-cols-[3rem_1fr] items-center gap-4 p-4">
+        <article className="panel glass-panel card-3d grid grid-cols-[3rem_1fr] items-center gap-4 p-4">
           <span className="icon-badge h-12 w-12 text-lg">PX</span>
           <span>
             <span className="stat-label">Network Status</span>
@@ -366,7 +305,6 @@ export default function GroupDashboardPage() {
             <span className="text-xs font-black text-emerald-600">Connected</span>
           </span>
         </article>
->>>>>>> theirs
       </section>
     </DashboardShell>
   );

@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [selectedRole, setSelectedRole] = useState("member");
   const [form, setForm] = useState({ name: "", email: "", password: "", idCard: "", phoneNumber: "", country: "Kenya" });
   const [status, setStatus] = useState("");
+  const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const activeRole = roleOptions.find((role) => role.id === selectedRole) || roleOptions[0];
@@ -20,9 +21,16 @@ export default function LoginPage() {
     setForm((current) => ({ ...current, [field]: value }));
   }
 
+  function handleModeChange(newMode) {
+    setMode(newMode);
+    setStatus("");
+    setSuccess("");
+  }
+
   async function continueToDashboard(event) {
     event.preventDefault();
     setStatus("");
+    setSuccess("");
 
     if (!form.email || !form.password) {
       setStatus("Enter an email and password.");
@@ -38,36 +46,46 @@ export default function LoginPage() {
 
     setIsSubmitting(true);
     try {
-      const result =
-        mode === "register"
-          ? await registerPayLoopUser({
-              email: form.email,
-              password: form.password,
-              displayName: form.name,
-              role: activeRole.id,
-              idCard: form.idCard,
-              phoneNumber: form.phoneNumber,
-              country: form.country,
-            })
-          : await loginPayLoopUser({
-              email: form.email,
-              password: form.password,
-              fallbackRole: activeRole.id,
-            });
+      if (mode === "register") {
+        await registerPayLoopUser({
+          email: form.email,
+          password: form.password,
+          displayName: form.name,
+          role: activeRole.id,
+          idCard: form.idCard,
+          phoneNumber: form.phoneNumber,
+          country: form.country,
+        });
 
-      const savedRole = roleOptions.find((role) => role.id === result.role) || activeRole;
-      window.localStorage.setItem("payloopRole", savedRole.id);
-      router.push(savedRole.route);
+        setSuccess("Registration successful! Please log in with your credentials.");
+        setMode("login");
+        setForm((current) => ({ ...current, password: "" }));
+      } else {
+        const result = await loginPayLoopUser({
+          email: form.email,
+          password: form.password,
+          fallbackRole: activeRole.id,
+        });
+
+        const savedRole = roleOptions.find((role) => role.id === result.role) || activeRole;
+        window.localStorage.setItem("payloopRole", savedRole.id);
+        router.push(savedRole.route);
+      }
     } catch (error) {
-      setStatus(error.message || "Firebase login failed.");
+      setStatus(error.message || "Firebase operation failed.");
     } finally {
       setIsSubmitting(false);
     }
   }
 
   return (
-    <main className="dashboard-shell min-h-screen px-4 py-8">
-      <section className="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-6xl gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:py-8">
+    <main className="dashboard-shell min-h-screen px-4 py-8 relative overflow-hidden flex items-center justify-center">
+      {/* Background Floating Parallax Glow Orbs */}
+      <div className="glow-orb glow-orb-primary w-[30rem] h-[30rem] top-[-10%] left-[-10%] animate-float-1" />
+      <div className="glow-orb glow-orb-secondary w-[30rem] h-[30rem] bottom-[-10%] right-[-10%] animate-float-2" />
+      <div className="glow-orb glow-orb-amber w-[25rem] h-[25rem] top-[40%] left-[60%] animate-float-rotate" />
+
+      <section className="relative z-10 mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-6xl gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:py-8 animate-fade-in-up">
         <div className="lg:sticky lg:top-12">
           <Link href="/" className="mb-8 flex items-center gap-3">
             <span className="grid h-11 w-11 place-items-center rounded-[7px] bg-[var(--accent)] font-black text-white">P</span>
@@ -92,7 +110,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <form className="panel p-5" onSubmit={continueToDashboard}>
+        <form className="panel glass-panel card-3d p-6 sm:p-8" onSubmit={continueToDashboard}>
           <div className="mb-5">
             <h2 className="text-2xl font-black">Account access</h2>
             <p className="mt-2 text-sm font-medium text-slate-500">Register a new user or sign in to an existing Firebase account.</p>
@@ -103,7 +121,7 @@ export default function LoginPage() {
               <button
                 className={`min-h-10 rounded-[6px] text-sm font-black interactive-toggle ${mode === item ? "bg-white text-violet-700 shadow-sm" : "text-slate-500"}`}
                 key={item}
-                onClick={() => setMode(item)}
+                onClick={() => handleModeChange(item)}
                 type="button"
               >
                 {item === "register" ? "Register" : "Login"}
@@ -163,10 +181,12 @@ export default function LoginPage() {
                     }`}
                     key={role.id}
                   >
-                    <span className="flex items-center gap-3">
-                      <input className="h-4 w-4 accent-violet-600" checked={selectedRole === role.id} name="role" onChange={() => setSelectedRole(role.id)} type="radio" />
-                      <strong className="text-lg">{role.role}</strong>
-                      <span className="ml-auto text-xs font-black uppercase text-slate-400">{role.route}</span>
+                    <span className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="flex items-center gap-3">
+                        <input className="h-4 w-4 accent-violet-600" checked={selectedRole === role.id} name="role" onChange={() => setSelectedRole(role.id)} type="radio" />
+                        <strong className="text-base sm:text-lg">{role.role}</strong>
+                      </span>
+                      <span className="text-xs font-black uppercase text-slate-400 bg-slate-100 rounded px-1.5 py-0.5">{role.route}</span>
                     </span>
                     <span className="text-sm font-medium leading-6 text-slate-600">{role.description}</span>
                   </label>
@@ -202,9 +222,20 @@ export default function LoginPage() {
           )}
 
           <button className="button-primary mt-5 w-full" disabled={isSubmitting} type="submit">
-            {isSubmitting ? "Processing..." : mode === "register" ? `Register & Open ${activeRole.role} Dashboard` : "Login & Open My Dashboard"}
+            {isSubmitting ? "Processing..." : mode === "register" ? "Register Account" : "Login & Open My Dashboard"}
           </button>
-          {status && <p className="mt-4 rounded-[7px] border border-[var(--border)] bg-slate-50 p-3 text-sm font-bold text-slate-600">{status}</p>}
+          {success && (
+            <div className="mt-4 rounded-[7px] border border-emerald-200 bg-emerald-50 p-3 text-sm font-bold text-emerald-800 flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>{success}</span>
+            </div>
+          )}
+          {status && (
+            <div className="mt-4 rounded-[7px] border border-rose-200 bg-rose-50 p-3 text-sm font-bold text-rose-800 flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
+              <span>{status}</span>
+            </div>
+          )}
         </form>
       </section>
     </main>

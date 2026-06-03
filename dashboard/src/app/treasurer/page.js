@@ -78,7 +78,7 @@ function toneClass(tone) {
 
 function FeatureList({ title, items }) {
   return (
-    <article className="panel p-4">
+    <article className="panel glass-panel card-3d p-4">
       <h2 className="text-lg font-black">{title}</h2>
       <div className="mt-3 grid gap-2">
         {items.map((item) => (
@@ -114,7 +114,7 @@ export default function TreasurerDashboardPage() {
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-6" id="dashboard">
         {overviewStats.map((stat) => (
-          <article className="panel metric-card p-4" key={stat.label}>
+          <article className="panel glass-panel card-3d metric-card p-4" key={stat.label}>
             <span className={`status-pill ${toneClass(stat.tone)}`}>{stat.label}</span>
             <strong className="relative z-10 mt-3 block text-2xl tracking-tight">{stat.value}</strong>
             <span className="relative z-10 mt-2 block text-xs font-black text-slate-500">{stat.helper}</span>
@@ -123,7 +123,7 @@ export default function TreasurerDashboardPage() {
       </section>
 
       <section className="mt-4 grid gap-4 xl:grid-cols-[1.2fr_0.8fr]" id="analytics">
-        <article className="panel p-4">
+        <article className="panel glass-panel card-3d p-4">
           <div className="mb-4 flex items-center justify-between">
             <div>
               <h2 className="text-lg font-black">Financial Analytics</h2>
@@ -134,7 +134,7 @@ export default function TreasurerDashboardPage() {
           <ContributionTrendChart data={contributionTrend} />
         </article>
 
-        <article className="panel p-4">
+        <article className="panel glass-panel card-3d p-4">
           <div className="mb-4">
             <h2 className="text-lg font-black">Loan Repayment Chart</h2>
             <p className="text-sm font-medium text-slate-500">Loan status and group financial trends.</p>
@@ -144,7 +144,7 @@ export default function TreasurerDashboardPage() {
       </section>
 
       <section className="mt-4 grid gap-4 xl:grid-cols-[0.85fr_1.15fr]" id="members">
-        <article className="panel p-4">
+        <article className="panel glass-panel card-3d p-4">
           <h2 className="text-lg font-black">Member Financial Records</h2>
           <p className="mt-1 text-sm font-medium text-slate-500">Contribution history, loan history, outstanding balances, credit scores, and repayment performance.</p>
           <div className="mt-4">
@@ -152,7 +152,7 @@ export default function TreasurerDashboardPage() {
           </div>
         </article>
 
-        <article className="panel overflow-hidden" id="repayments">
+        <article className="panel glass-panel card-3d overflow-hidden" id="repayments">
           <div className="flex items-center justify-between p-4">
             <div>
               <h2 className="text-lg font-black">Repayment Tracking</h2>
@@ -196,7 +196,7 @@ export default function TreasurerDashboardPage() {
       </section>
 
       <section className="mt-4 grid gap-4 xl:grid-cols-[0.72fr_1fr_0.78fr]">
-        <article className="panel p-4" id="transactions">
+        <article className="panel glass-panel card-3d p-4" id="transactions">
           <h2 className="text-lg font-black">Transactions</h2>
           <div className="mt-3 grid gap-2">
             {["Contribution Transactions", "Loan Disbursements", "Loan Repayments", "M-Pesa Transactions", "Blockchain Transactions"].map((item) => (
@@ -208,7 +208,7 @@ export default function TreasurerDashboardPage() {
           </div>
         </article>
 
-        <article className="panel p-4" id="notifications">
+        <article className="panel glass-panel card-3d p-4" id="notifications">
           <h2 className="text-lg font-black">Notifications</h2>
           <div className="mt-3 grid gap-3">
             {notifications.map((item) => (
@@ -223,7 +223,7 @@ export default function TreasurerDashboardPage() {
           </div>
         </article>
 
-        <article className="panel p-4">
+        <article className="panel glass-panel card-3d p-4">
           <h2 className="text-lg font-black">Wallet / Vault Management</h2>
           <div className="mt-3 grid gap-2">
             {walletDetails.map((item) => (
@@ -237,7 +237,7 @@ export default function TreasurerDashboardPage() {
       </section>
 
       <section className="mt-4 grid gap-4 xl:grid-cols-[0.72fr_1.28fr]" id="settings">
-        <article className="panel p-4">
+        <article className="panel glass-panel card-3d p-4">
           <h2 className="text-lg font-black">Quick Actions</h2>
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
             {quickActions.map((action, index) => (
@@ -246,7 +246,7 @@ export default function TreasurerDashboardPage() {
           </div>
         </article>
 
-        <article className="panel p-4" id="reports">
+        <article className="panel glass-panel card-3d p-4" id="reports">
           <h2 className="text-lg font-black">Reports and Financial Policy</h2>
           <div className="mt-3 grid gap-3 md:grid-cols-2">
             {["Monthly Financial Reports", "Contribution Reports", "Loan Reports", "Repayment Reports", "Export PDF/Excel Reports", "Contribution Amount Settings", "Penalty Rules", "Reminder Settings", "Payment Method Settings", "Financial Policy Settings"].map((item) => (

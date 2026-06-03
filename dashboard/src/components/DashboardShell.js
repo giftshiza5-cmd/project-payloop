@@ -39,9 +39,14 @@ export function DashboardShell({ title, subtitle, actions, children, publicView 
   const pathname = usePathname();
 
   return (
-    <div className="dashboard-shell">
-      <div className="grid min-h-screen lg:grid-cols-[248px_1fr]">
-        <aside className="hidden border-r border-[var(--border)] bg-white/88 p-4 shadow-[8px_0_28px_rgba(15,23,42,0.04)] backdrop-blur lg:block">
+    <div className="dashboard-shell relative overflow-hidden min-h-screen">
+      {/* Background Floating Parallax Glow Orbs */}
+      <div className="glow-orb glow-orb-primary w-[32rem] h-[32rem] top-[-10%] left-[-10%] animate-float-1" />
+      <div className="glow-orb glow-orb-secondary w-[32rem] h-[32rem] bottom-[5%] right-[-10%] animate-float-2" />
+      <div className="glow-orb glow-orb-amber w-[25rem] h-[25rem] top-[40%] left-[55%] animate-float-rotate" />
+
+      <div className="relative z-10 grid min-h-screen lg:grid-cols-[248px_1fr] animate-fade-in-up">
+        <aside className="hidden border-r border-[var(--border)] bg-white/60 p-4 shadow-[8px_0_28px_rgba(15,23,42,0.04)] backdrop-blur-md lg:block">
           <Link href="/" className="mb-7 flex items-center gap-3">
             <span className="grid h-10 w-10 place-items-center rounded-[7px] bg-[var(--accent)] font-black text-white">P</span>
             <span>
@@ -77,7 +82,7 @@ export function DashboardShell({ title, subtitle, actions, children, publicView 
           </nav>
 
           {!publicView && (
-            <div className="panel mt-7 p-4">
+            <div className="panel glass-panel card-3d mt-7 p-4">
               <p className="stat-label mb-3">Connected Wallet</p>
               <WalletButton />
               <div className="mt-4 border-t border-[var(--border)] pt-3">

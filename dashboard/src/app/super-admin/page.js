@@ -105,7 +105,7 @@ function toneClass(tone) {
 
 function PlatformSection({ id, title, items }) {
   return (
-    <article className="panel p-4" id={id}>
+    <article className="panel glass-panel card-3d p-4" id={id}>
       <h2 className="text-lg font-black">{title}</h2>
       <div className="mt-3 grid gap-2">
         {items.map((item) => (
@@ -141,7 +141,7 @@ export default function SuperAdminDashboardPage() {
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" id="dashboard">
         {overviewStats.map((stat) => (
-          <article className="panel metric-card p-4" key={stat.label}>
+          <article className="panel glass-panel card-3d metric-card p-4" key={stat.label}>
             <span className={`status-pill ${toneClass(stat.tone)}`}>{stat.label}</span>
             <strong className="relative z-10 mt-3 block text-2xl tracking-tight">{stat.value}</strong>
             <span className="relative z-10 mt-2 block text-xs font-black text-slate-500">{stat.helper}</span>
@@ -150,7 +150,7 @@ export default function SuperAdminDashboardPage() {
       </section>
 
       <section className="mt-4 grid gap-4 xl:grid-cols-[1.15fr_0.85fr]" id="analytics">
-        <article className="panel p-4">
+        <article className="panel glass-panel card-3d p-4">
           <div className="mb-4 flex items-center justify-between">
             <div>
               <h2 className="text-lg font-black">Analytics & Insights</h2>
@@ -161,7 +161,7 @@ export default function SuperAdminDashboardPage() {
           <ContributionTrendChart data={contributionTrend} />
         </article>
 
-        <article className="panel p-4">
+        <article className="panel glass-panel card-3d p-4">
           <div className="mb-4">
             <h2 className="text-lg font-black">Loan Trends</h2>
             <p className="text-sm font-medium text-slate-500">Approved, rejected, defaulter, and repayment trend oversight.</p>
@@ -171,7 +171,7 @@ export default function SuperAdminDashboardPage() {
       </section>
 
       <section className="mt-4 grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
-        <article className="panel p-4">
+        <article className="panel glass-panel card-3d p-4">
           <h2 className="text-lg font-black">Security & Audit Watch</h2>
           <div className="mt-3 grid gap-3">
             {auditEvents.map((event) => (
@@ -187,7 +187,7 @@ export default function SuperAdminDashboardPage() {
           </div>
         </article>
 
-        <article className="panel overflow-hidden" id="support">
+        <article className="panel glass-panel card-3d overflow-hidden" id="support">
           <div className="flex items-center justify-between p-4">
             <div>
               <h2 className="text-lg font-black">Support Center</h2>

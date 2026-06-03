@@ -1,5 +1,5 @@
 import { initializeApp, getApps } from "firebase/app";
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, updateProfile, signOut } from "firebase/auth";
 import { doc, getDoc, getFirestore, serverTimestamp, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -65,7 +65,9 @@ export async function registerPayLoopUser({ email, password, role, displayName, 
     { merge: true },
   );
 
-  return { user: credential.user, role };
+  await signOut(auth);
+
+  return { user: null, role };
 }
 
 export async function loginPayLoopUser({ email, password, fallbackRole }) {
