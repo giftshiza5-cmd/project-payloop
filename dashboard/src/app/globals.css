@@ -6,6 +6,10 @@
   color-scheme: light;
 }
 
+.dark {
+  color-scheme: dark;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -17,6 +21,12 @@ body {
   background: #f5f7fb;
   color: #111827;
   font-family: Inter, Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark body {
+  background: #090e1a;
+  color: #f8fafc;
 }
 
 button,
@@ -48,13 +58,33 @@ button {
     radial-gradient(circle at top left, rgba(124, 58, 237, 0.09), transparent 28rem),
     linear-gradient(135deg, #fbfdff 0%, #f5f7fb 52%, #edf2f8 100%);
   color: var(--text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark .dashboard-shell {
+  --bg: #090e1a;
+  --panel: #0f172a;
+  --panel-soft: #1e293b;
+  --border: #1e293b;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --accent: #8b5cf6;
+  --accent-strong: #a78bfa;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --success: #4ade80;
+  --ink: #f8fafc;
+  background:
+    radial-gradient(circle at top left, rgba(139, 92, 246, 0.15), transparent 30rem),
+    linear-gradient(135deg, #090e1a 0%, #0f172a 50%, #1e293b 100%);
 }
 
 .panel {
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.94);
+  background: var(--panel);
   box-shadow: 0 14px 32px rgba(15, 23, 42, 0.07);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .field {
@@ -92,7 +122,7 @@ button {
 .field textarea:focus,
 .field select:focus {
   border-color: var(--accent);
-  background: white;
+  background: var(--panel);
   outline: none;
   box-shadow: 0 0 0 3px rgba(109, 61, 242, 0.15);
 }
@@ -142,12 +172,12 @@ button {
 
 .button-secondary {
   border: 1px solid var(--border);
-  background: white;
+  background: var(--panel);
   color: var(--text);
 }
 
 .button-secondary:hover:not(:disabled) {
-  background: #f8fafc;
+  background: var(--panel-soft);
   border-color: #cbd5e1;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
   transform: translateY(-1px);
@@ -331,6 +361,36 @@ button {
     0 4px 30px rgba(15, 23, 42, 0.04), 
     inset 0 1px 1px rgba(255, 255, 255, 0.6),
     0 14px 32px rgba(15, 23, 42, 0.05) !important;
+}
+
+.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.62) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  box-shadow: 
+    0 4px 30px rgba(0, 0, 0, 0.2), 
+    inset 0 1px 1px rgba(255, 255, 255, 0.05),
+    0 14px 32px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark .interactive-card:active {
+  background: #1e1b4b !important;
+}
+
+.dark .interactive-toggle:hover {
+  color: var(--accent-strong);
+}
+
+.dark .interactive-toggle:active {
+  background: rgba(30, 41, 59, 0.9);
+}
+
+.dark .button-secondary:active:not(:disabled) {
+  background: #334155;
+  border-color: #475569;
+}
+
+.dark .button-ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* 3D Transform Lift Cards */
