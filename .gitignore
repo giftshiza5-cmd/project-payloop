@@ -8,3 +8,9 @@ artifacts/
 cache/
 .expo/
 .next/
+
+# Firebase Service Accounts / Keys
+*service-account*.json
+*serviceAccountKey*.json
+*credentials*.json
+*.private.json
