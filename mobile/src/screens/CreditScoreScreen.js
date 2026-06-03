@@ -13,12 +13,17 @@ import { ScoreLine } from "../components/ScoreLine";
 import { BottomTabs } from "../components/BottomTabs";
 
 export function CreditScoreScreen({ navigation }) {
-  const { wallet } = usePayLoopApp();
+  const { wallet, theme } = usePayLoopApp();
   const [score, setScore] = useState("720");
   const [profile, setProfile] = useState(null);
   
   // Animation value for the needle gauge
   const needleAnim = useRef(new Animated.Value(0)).current;
+
+  const isDark = theme === "dark";
+  const cardBg = isDark ? "#0f172a" : colors.card;
+  const borderColor = isDark ? "#1e293b" : colors.border;
+  const textColor = isDark ? "#ffffff" : colors.ink;
 
   useEffect(() => {
     async function loadScore() {
@@ -68,7 +73,7 @@ export function CreditScoreScreen({ navigation }) {
       <View style={styles.scoreDialContainer}>
         <View style={styles.scoreDial}>
           {/* Dial back arcs */}
-          <View style={styles.arcBack} />
+          <View style={[styles.arcBack, isDark && styles.arcBackDark]} />
           <View style={[styles.arcSegment, styles.arcWarm]} />
           <View style={[styles.arcSegment, styles.arcGreen]} />
           
@@ -79,37 +84,37 @@ export function CreditScoreScreen({ navigation }) {
               { transform: [{ rotateZ: needleRotation }] }
             ]}
           >
-            <View style={styles.needleLine} />
+            <View style={[styles.needleLine, { backgroundColor: textColor }]} />
           </Animated.View>
           
           {/* Central Pivot Cap */}
-          <View style={styles.needlePivot} />
+          <View style={[styles.needlePivot, { backgroundColor: colors.purple }]} />
           
           {/* Score labels */}
           <View style={styles.scoreLabels}>
-            <Text style={styles.scoreNumber}>{score}</Text>
+            <Text style={[styles.scoreNumber, { color: textColor }]}>{score}</Text>
             <Text style={styles.scoreLabel}>Excellent</Text>
             <Text style={styles.scoreGain}>+40 points this month</Text>
           </View>
         </View>
       </View>
       
-      <View style={styles.scoreBreakdown}>
+      <View style={[styles.scoreBreakdown, { backgroundColor: cardBg, borderColor: borderColor }]}>
         <ScoreLine label="On-time Contributions" value={profile ? `+${profile.onTimeContributions}` : "+350"} />
         <ScoreLine label="Loan Repayments" value={profile ? `+${profile.loansRepaid}` : "+250"} />
         <ScoreLine label="Account Age" value="+120" />
         
-        <View style={styles.totalScoreRow}>
-          <Text style={styles.cardTitle}>Total Score</Text>
-          <Text style={styles.boldValue}>{score} / 1000</Text>
+        <View style={[styles.totalScoreRow, { borderTopColor: borderColor }]}>
+          <Text style={[styles.cardTitle, { color: textColor }]}>Total Score</Text>
+          <Text style={[styles.boldValue, { color: textColor }]}>{score} / 1000</Text>
         </View>
       </View>
       
-      <View style={styles.tipCard}>
+      <View style={[styles.tipCard, { backgroundColor: cardBg, borderColor: borderColor }]}>
         <Text style={styles.tipIcon}>★</Text>
         <View style={styles.tipContent}>
-          <Text style={styles.cardTitle}>Improve your score</Text>
-          <Text style={styles.mutedSmall}>Keep making on-time contributions and repay loans early.</Text>
+          <Text style={[styles.cardTitle, { color: textColor }]}>Improve your score</Text>
+          <Text style={[styles.mutedSmall, { color: isDark ? "#94a3b8" : colors.muted }]}>Keep making on-time contributions and repay loans early.</Text>
         </View>
       </View>
       
@@ -133,13 +138,16 @@ const styles = StyleSheet.create({
     width: 220,
   },
   arcBack: {
-    borderColor: "#dbeee1",
+    borderColor: "#dfe7f2",
     borderRadius: 110,
     borderWidth: 12,
     height: 220,
     position: "absolute",
     top: 0,
     width: 220,
+  },
+  arcBackDark: {
+    borderColor: "#1e293b",
   },
   arcSegment: {
     borderRadius: 110,
@@ -150,7 +158,7 @@ const styles = StyleSheet.create({
     width: 220,
   },
   arcWarm: {
-    borderColor: "#fb923c",
+    borderColor: "#f59e0b",
     transform: [{ rotateZ: "-38deg" }],
   },
   arcGreen: {
@@ -166,7 +174,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   needleLine: {
-    backgroundColor: colors.ink,
     borderRadius: 6,
     height: 85,
     width: 4,
@@ -176,7 +183,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   needlePivot: {
-    backgroundColor: colors.green,
     borderColor: "#ffffff",
     borderWidth: 3.5,
     borderRadius: 15,
@@ -197,7 +203,6 @@ const styles = StyleSheet.create({
     bottom: 50,
   },
   scoreNumber: {
-    color: colors.ink,
     fontSize: 50,
     fontWeight: "900",
   },
@@ -214,19 +219,16 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   scoreBreakdown: {
-    backgroundColor: colors.card,
-    borderColor: colors.border,
     borderRadius: 12,
     borderWidth: 1,
     padding: 16,
-    shadowColor: "#0b1f16",
+    shadowColor: "#000000",
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.04,
     shadowRadius: 6,
     elevation: 1,
   },
   totalScoreRow: {
-    borderTopColor: colors.border,
     borderTopWidth: 1,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -234,25 +236,21 @@ const styles = StyleSheet.create({
     paddingTop: 14,
   },
   cardTitle: {
-    color: colors.ink,
     fontSize: 14,
     fontWeight: "900",
   },
   boldValue: {
-    color: colors.ink,
     fontSize: 14,
     fontWeight: "900",
   },
   tipCard: {
     alignItems: "center",
-    backgroundColor: colors.card,
-    borderColor: colors.border,
     borderRadius: 12,
     borderWidth: 1,
     flexDirection: "row",
     gap: 12,
     padding: 16,
-    shadowColor: "#0b1f16",
+    shadowColor: "#000000",
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.03,
     shadowRadius: 4,
@@ -266,7 +264,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mutedSmall: {
-    color: colors.muted,
     fontSize: 12,
     marginTop: 2,
   },

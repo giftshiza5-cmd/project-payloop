@@ -38,21 +38,16 @@ export function QRScannerScreen({ route, navigation }) {
     );
   }
 
-  const isAddress = scanned.startsWith("0x") && scanned.length === 42;
-  const isUrl = scanned.startsWith("http://") || scanned.startsWith("https://");
+  const isAddress = /^0x[0-9a-fA-F]{40}$/.test(scanned.trim());
+  const isUrl = /^(https?:\/\/|payloop:\/\/|ethereum:|wc:|mailto:|sms:)/i.test(scanned.trim());
 
   const handleOpenAction = async () => {
     if (isAddress) {
       // Navigate to Contribute screen and prefill the wallet address
-      navigation.navigate("Contribute", { scannedAddress: scanned });
+      navigation.navigate("Contribute", { scannedAddress: scanned.trim() });
     } else if (isUrl) {
       try {
-        const supported = await Linking.canOpenURL(scanned);
-        if (supported) {
-          await Linking.openURL(scanned);
-        } else {
-          Alert.alert("Error", `Cannot open URL: ${scanned}`);
-        }
+        await Linking.openURL(scanned.trim());
       } catch (error) {
         Alert.alert("Error opening link", error.message);
       }

@@ -14,7 +14,7 @@
       "package": "com.payloop.mobile"
     },
     "web": {
-      "favicon": "./assets/favicon.svg"
+      "favicon": "./assets/favicon.png"
     },
     "plugins": [
       [
