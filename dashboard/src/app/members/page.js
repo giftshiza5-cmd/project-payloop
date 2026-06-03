@@ -82,7 +82,7 @@ export default function MembersPage() {
               <div key={member.address} className="grid gap-3 rounded-[7px] border border-[var(--border)] p-3 md:grid-cols-[1fr_1fr_auto] md:items-center">
                 <div>
                   <strong>{member.name}</strong>
-                  <p className="text-sm text-slate-400">{member.role} · {member.contribution}</p>
+                  <p className="text-sm text-slate-400">{member.role} - {member.contribution}</p>
                 </div>
                 <p className="truncate-address text-slate-300">{member.address}</p>
                 <button className="button-secondary" onClick={() => removeMember(member.address)}>Remove</button>
